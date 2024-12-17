@@ -1,18 +1,25 @@
-from flask import Flask, jsonify, request
+from flask import Flask
 from pymongo import MongoClient
 from config import Config
-from models.user import User
-from models.media import Media
-from models.borrowing import Borrowing
+from routes.user import user_bp
+from routes.borrowing import borrowing_bp
 
-app = Flask(__name__)
-app.config.from_object(Config)
+def create_app():
+    app = Flask(__name__)
+    app.config.from_object(Config)
 
-# MongoDB Connection
-client = MongoClient(app.config['MONGODB_URI'])
-db = client.get_default_database()
+    # MongoDB Connection Setup
+    client = MongoClient(app.config['MONGODB_URI'])
+    db = client.get_default_database()
 
-# Initialize models
-user_model = User(db)
-media_model = Media(db)
-borrowing_model = Borrowing(db)
+    # Register Blueprints (routes)
+    app.register_blueprint(user_bp, url_prefix='/api/users')
+    app.register_blueprint(borrowing_bp, url_prefix='/return')
+    #app.register_blueprint(borrowing_bp, url_prefix='/borrow')
+
+    return app, db
+    
+app, db = create_app()
+
+if __name__ == '__main__':
+    app.run(debug=True, port=5000)

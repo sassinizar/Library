@@ -1,15 +1,13 @@
-from pymongo import MongoClient
+# models/user.py
 from bson import ObjectId
 import bcrypt
 
 class User:
     def __init__(self, db):
-        self.collection = db['users']
+        self.collection = db['user']
     
     def create_user(self, username, email, password):
-        # Hash the password
         hashed_password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
-        
         user = {
             'username': username,
             'email': email,

@@ -1,11 +1,10 @@
-from pymongo import MongoClient
+# models/borrowing.py
 from bson import ObjectId
-import bcrypt
 from datetime import datetime, timedelta
 
 class Borrowing:
     def __init__(self, db):
-        self.collection = db['borrowings']
+        self.collection = db['borrowing']
     
     def borrow_media(self, user_id, media_id, borrow_period_days=14):
         borrowing = {
