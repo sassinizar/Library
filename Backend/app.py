@@ -2,11 +2,13 @@
 from flask import Flask
 from pymongo import MongoClient
 from routes.user import user_bp
+from routes.media import media_bp
 from config import Config
+from flask_cors import CORS
 
 def create_app():
     app = Flask(__name__)
-    
+    CORS(app)
     # Load configuration
     app.config.from_object(Config)
     
@@ -22,7 +24,7 @@ def create_app():
     
     # Register blueprints
     app.register_blueprint(user_bp, url_prefix='/api/users')
-    
+    app.register_blueprint(media_bp, url_prefix='/api/medias')
     return app
 
 # Create the Flask application instance

@@ -3,7 +3,7 @@ import React from "react";
 const Home = () => {
   return (
     <div style={styles.container}>
-      <h1 style={styles.title}>Welcome to Library Management System</h1>
+      <h1 style={styles.title}>Welcome to NS Library</h1>
       <p style={styles.description}>
         Manage your media and borrowings efficiently with our easy-to-use platform.
       </p>
