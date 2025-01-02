@@ -8,7 +8,7 @@ borrowing_bp = Blueprint('borrowing', __name__)
 def borrow_media():
     data = request.json
     try:
-        borrowing = Borrowing(db).borrow_media(
+        borrowing = Borrowing.borrow_media(
             data['user_id'], 
             data['media_id'], 
             data.get('borrow_period_days', 14)

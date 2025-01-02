@@ -1,0 +1,10 @@
+flask
+pymongo
+python-dotenv
+werkzeug
+dnspython
+pytest
+requests
+gunicorn
+flask-cors
+bcrypt
