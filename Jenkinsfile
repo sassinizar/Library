@@ -6,17 +6,17 @@ pipeline {
 
         stage('build') {
             steps {
-               sh 'echo Build stage'     
+               sh 'echo build stage'     
             }
         }
         stage('push') {
             steps {
-                sh 'echo push'
+                sh 'echo "the scond stage push"'
             }
         }
         stage('deploy') {
             steps {
-                sh 'echo deploy'
+                sh 'echo "the third stage deploy"'
             }
         }
     }
