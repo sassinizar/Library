@@ -10,29 +10,17 @@ pipeline {
     stages {
         stage('Build Docker Image') {
             steps {
-                script {
-                    echo "Building Docker image..."
-                    sh """
-                    docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ./Backend
-                    """
-                }
+               echo 'build stage'     
             }
         }
         stage('Push Docker Image') {
             steps {
-                script {
-                    echo "Pushing Docker image to Docker Hub..."
-                    sh """
-                    echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-                    docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
-                    """
-                }
+                echo "the scond stage push"
             }
         }
         stage('Deploy') {
             steps {
-                echo "Deploying application..."
-                // Add deployment logic here (e.g., deploy to Kubernetes)
+                echo "the third stage deploy"
             }
         }
     }
