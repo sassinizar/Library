@@ -9,28 +9,24 @@ pipeline {
     stages {
         stage('Build Docker Image') {
             steps {
-                node {
-                    script {
-                        echo "Building my Docker image......."
-                        sh """
-                        docker build -t ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} ./Backend
-                        """
-                    }
+                script {
+                    echo "Building my Docker image......."
+                    sh """
+                    docker build -t ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} ./Backend
+                    """
                 }
             }
         }
 
         stage('Push Docker Image') {
             steps {
-                node {
-                    script {
-                        echo "Pushing Docker image to Docker Hub..."
-                        withCredentials([usernamePassword(credentialsId: 'nizarsassi-dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                            sh """
-                            echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
-                            docker push ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}
-                            """
-                        }
+                script {
+                    echo "Pushing Docker image to Docker Hub..."
+                    withCredentials([usernamePassword(credentialsId: 'nizarsassi-dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh """
+                        echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
+                        docker push ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}
+                        """
                     }
                 }
             }
@@ -38,20 +34,16 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                node {
-                    echo "Deploying application..."
-                    // Add deployment logic here (e.g., deploy to Kubernetes, Docker Swarm, etc.)
-                }
+                echo "Deploying application..."
+                // Add deployment logic here (e.g., deploy to Kubernetes, Docker Swarm, etc.)
             }
         }
     }
 
     post {
         always {
-            node {
-                echo "Cleaning up Docker resources..."
-                sh 'docker rmi ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} || true'
-            }
+            echo "Cleaning up Docker resources..."
+            sh 'docker rmi ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} || true'
         }
     }
 }
