@@ -4,7 +4,6 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'my-repository/flaskapp'
         DOCKER_TAG = 'latest' // You can use a dynamic tag like "${env.BUILD_NUMBER}"
-        DOCKER_CREDENTIALS = credentials('nizarsassi-dockerhub') // Jenkins credentials ID for Docker Hub
     }
 
     stages {
@@ -13,26 +12,30 @@ pipeline {
                 script {
                     echo "Building my Docker image......."
                     sh """
-                    docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ./Backend
+                    docker build -t ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} ./Backend
                     """
                 }
             }
         }
+
         stage('Push Docker Image') {
             steps {
                 script {
                     echo "Pushing Docker image to Docker Hub..."
-                    sh """
-                    echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
-                    docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
-                    """
+                    withCredentials([usernamePassword(credentialsId: 'nizarsassi-dockerhub', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        sh """
+                        echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
+                        docker push ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}
+                        """
+                    }
                 }
             }
         }
+
         stage('Deploy') {
             steps {
                 echo "Deploying application..."
-                // Add deployment logic here (e.g., deploy to Kubernetes)
+                // Add deployment logic here (e.g., deploy to Kubernetes, Docker Swarm, etc.)
             }
         }
     }
@@ -40,7 +43,7 @@ pipeline {
     post {
         always {
             echo "Cleaning up Docker resources..."
-            sh 'docker rmi ${DOCKER_IMAGE}:${DOCKER_TAG} || true'
+            sh 'docker rmi ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} || true'
         }
     }
 }
