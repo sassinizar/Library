@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        DOCKER_BUILDKIT = '1' // Enable Docker BuildKit
         DOCKER_IMAGE = 'my-repository/flaskapp'
         DOCKER_TAG = 'latest' // You can use a dynamic tag like "${env.BUILD_NUMBER}"
     }
@@ -12,7 +13,7 @@ pipeline {
                 script {
                     echo "Building my Docker image......."
                     sh """
-                    docker build -t ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} ./Backend
+                    docker buildx build -t ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} ./Backend
                     """
                 }
             }
