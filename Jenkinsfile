@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_BUILDKIT = '1' // Enable Docker BuildKit
         DOCKER_IMAGE = 'my-repository/flaskapp'
         DOCKER_TAG = 'latest' // You can use a dynamic tag like "${env.BUILD_NUMBER}"
     }
@@ -13,7 +12,7 @@ pipeline {
                 script {
                     echo "Building my Docker image......."
                     sh """
-                    docker buildx build -t ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} ./Backend
+                    docker build -t ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} ./Backend
                     """
                 }
             }
@@ -38,13 +37,6 @@ pipeline {
                 echo "Deploying application..."
                 // Add deployment logic here (e.g., deploy to Kubernetes, Docker Swarm, etc.)
             }
-        }
-    }
-
-    post {
-        always {
-            echo "Cleaning up Docker resources..."
-            sh 'docker rmi ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} || true'
         }
     }
 }
