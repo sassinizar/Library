@@ -11,7 +11,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    echo "Building Docker image......."
+                    echo "Building my Docker image......."
                     sh """
                     docker build -t ${DOCKER_IMAGE}:${DOCKER_TAG} ./Backend
                     """
