@@ -40,7 +40,7 @@ pipeline {
                 script {
                     echo "Pushing Docker image frontend to Docker Hub..."
                     sh """
-                    echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                    docker login -u $DOCKER_USERNAME --password-stdin
                     docker push ${DOCKER_IMAGE}:${env.BUILD_NUMBER}
                     """
                 }
@@ -51,7 +51,7 @@ pipeline {
                 script {
                     echo "Pushing Docker image backend to Docker Hub..."
                     sh """
-                    echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                    docker login -u $DOCKER_USERNAME --password-stdin
                     docker push ${DOCKER_IMAGE}:${env.BUILD_NUMBER}
                     """
                 }
