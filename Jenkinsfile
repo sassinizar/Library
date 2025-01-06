@@ -2,10 +2,11 @@ pipeline {
     agent any
 
     environment {
+
         DOCKER_IMAGE_FRONT = 'flaskapp'
         DOCKER_IMAGE_BACK = 'reactapp'
+
         DOCKER_TAG = 'latest' // You can use a dynamic tag like "${env.BUILD_NUMBER}"
-        DOCKER_CREDENTIALS = credentials('nizarsassi-dockerhub') // Jenkins credentials ID for Docker Hub
     }
 
     stages {
@@ -72,5 +73,6 @@ pipeline {
             echo "Cleaning up Docker resources..."
             sh 'docker rmi ${DOCKER_IMAGE}:${env.BUILD_NUMBER} || true'
         }
-    }
+    }           
+
 }
