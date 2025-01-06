@@ -2,44 +2,77 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = 'nizar27/flask-app'
+
+        DOCKER_IMAGE_FRONT = 'flaskapp'
+        DOCKER_IMAGE_BACK = 'reactapp'
+
         DOCKER_TAG = 'latest' // You can use a dynamic tag like "${env.BUILD_NUMBER}"
     }
 
     stages {
-        stage('Build Docker Image') {
+        stages {
+        stage('Checkout') {
+            steps {
+                git 'https://github.com/sassinizar/Library.git'
+            }
+        }
+        stage('Build Docker frontend Image') {
             steps {
                 script {
-                    echo "Building my Docker image......."
+                    echo "Building backend Docker image..."
                     sh """
-                    docker build -t ${env.DOCKER_IMAGE}:${env.BUILD_NUMBER} ./Backend
+                    docker build -t ${DOCKER_IMAGE_FRONT}:${env.BUILD_NUMBER} ./frontend
                     """
                 }
             }
         }
-
-        stage('Push Docker Image') {
+        stage('Build Docker Backend  Image') {
             steps {
                 script {
-                    echo "Pushing Docker image to Docker Hub..."
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-token', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh """
-                        echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
-                        docker push ${env.DOCKER_IMAGE}:${env.BUILD_NUMBER}
-                        """
-                    }
+                    echo "Building Docker frontend image..."
+                    sh """
+                    docker build -t ${DOCKER_IMAGE}:${env.BUILD_NUMBER} ./Backend
+                    """
                 }
             }
         }
-
-        stage('Deploy') {
+        stage('Push frontend Docker Image') {
             steps {
-                echo "Deploying application..."
-                // Add deployment logic here (e.g., deploy to Kubernetes, Docker Swarm, etc.)
-                sh """
-                docker run ${env.DOCKER_IMAGE}:${env.BUILD_NUMBER}
-                """
+                script {
+                    echo "Pushing Docker image frontend to Docker Hub..."
+                    sh """
+                    echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                    docker push ${DOCKER_IMAGE}:${env.BUILD_NUMBER}
+                    """
+                }
+            }
+        }
+        stage('Push backend Docker Image') {
+            steps {
+                script {
+                    echo "Pushing Docker image backend to Docker Hub..."
+                    sh """
+                    echo $DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin
+                    docker push ${DOCKER_IMAGE}:${env.BUILD_NUMBER}
+                    """
+                }
+            }
+        }
+        stage('Deploy with Docker-Compose') {
+            steps {
+                script {
+                    sh 'docker-compose down'
+                    sh 'docker-compose up -d'
+                }
             }
         }
     }
+
+    post {
+        always {
+            echo "Cleaning up Docker resources..."
+            sh 'docker rmi ${DOCKER_IMAGE}:${env.BUILD_NUMBER} || true'
+        }
+    }           
+
 }
