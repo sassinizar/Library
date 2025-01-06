@@ -37,10 +37,14 @@ pipeline {
             steps {
                 script {
                     echo "Pushing frontend Docker image to Docker Hub..."
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-token', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh """
-                        echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
-                        docker push ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-token', 
+                           usernameVariable: 'DOCKER_USERNAME', 
+                           passwordVariable: 'DOCKER_PASSWORD')]) {
+                sh """
+                    echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
+                    docker push \${DOCKER_REGISTRY}/\${IMAGE_NAME}:\${IMAGE_TAG}
+                    docker logout
+                """
                 }
             }
         }
@@ -48,10 +52,14 @@ pipeline {
             steps {
                 script {
                     echo "Pushing backend Docker image to Docker Hub..."
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-token', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh """
-                        echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
-                        docker push ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-token', 
+                           usernameVariable: 'DOCKER_USERNAME', 
+                           passwordVariable: 'DOCKER_PASSWORD')]) {
+                sh """
+                    echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
+                    docker push \${DOCKER_REGISTRY}/\${IMAGE_NAME}:\${IMAGE_TAG}
+                    docker logout
+                """
                 }
             }
         }
