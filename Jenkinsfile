@@ -16,8 +16,7 @@ pipeline {
             steps {
                 script {
                     echo "Building frontend Docker image..."
-                    sh """
-                    
+                    sh """                  
                     docker build -t ${DOCKER_IMAGE_FRONT}:${DOCKER_TAG} ./frontend
                     """
                 }
@@ -48,6 +47,7 @@ pipeline {
                 }
             }
         }
+     }
         stage('Push Backend Docker Image') {
             steps {
                 script {
@@ -63,6 +63,7 @@ pipeline {
                 }
             }
         }
+      }
         stage('Deploy with Docker-Compose') {
             steps {
                 script {
@@ -73,4 +74,4 @@ pipeline {
             }
         }
     }
-}
+
