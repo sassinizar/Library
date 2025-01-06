@@ -64,16 +64,4 @@ pipeline {
             }
         }
     }
-
-    post {
-        always {
-            script {
-                echo "Cleaning up Docker resources..."
-                sh """
-                docker rmi ${DOCKER_IMAGE_FRONT}:${DOCKER_TAG} || true
-                docker rmi ${DOCKER_IMAGE_BACK}:${DOCKER_TAG} || true
-                """
-            }
-        }
-    }
 }
