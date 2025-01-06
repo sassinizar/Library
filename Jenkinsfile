@@ -12,7 +12,7 @@ pipeline {
                 script {
                     echo "Building my Docker image......."
                     sh """
-                    docker build -t ${env.DOCKER_IMAGE}:${env.DOCKER_TAG} ./Backend
+                    docker build -t ${env.DOCKER_IMAGE}:${env.BUILD_NUMBER} ./Backend
                     """
                 }
             }
@@ -25,7 +25,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'dockerhub-token', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         sh """
                         echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
-                        docker push ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}
+                        docker push ${env.DOCKER_IMAGE}:${env.BUILD_NUMBER}
                         """
                     }
                 }
@@ -36,6 +36,9 @@ pipeline {
             steps {
                 echo "Deploying application..."
                 // Add deployment logic here (e.g., deploy to Kubernetes, Docker Swarm, etc.)
+                sh """
+                docker run ${env.DOCKER_IMAGE}:${env.BUILD_NUMBER}
+                """
             }
         }
     }
