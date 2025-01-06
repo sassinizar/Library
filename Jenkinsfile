@@ -16,8 +16,7 @@ pipeline {
             steps {
                 script {
                     echo "Building frontend Docker image..."
-                    sh """
-                    
+                    sh """                  
                     docker build -t ${DOCKER_IMAGE_FRONT}:${DOCKER_TAG} ./frontend
                     """
                 }
@@ -37,24 +36,34 @@ pipeline {
             steps {
                 script {
                     echo "Pushing frontend Docker image to Docker Hub..."
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-token', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh """
-                        echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
-                        docker push ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-token', 
+                           usernameVariable: 'DOCKER_USERNAME', 
+                           passwordVariable: 'DOCKER_PASSWORD')]) {
+                sh """
+                    echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
+                    docker push \${DOCKER_REGISTRY}/\${IMAGE_NAME}:\${IMAGE_TAG}
+                    docker logout
+                """
                 }
             }
         }
+     }
         stage('Push Backend Docker Image') {
             steps {
                 script {
                     echo "Pushing backend Docker image to Docker Hub..."
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-token', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        sh """
-                        echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
-                        docker push ${env.DOCKER_IMAGE}:${env.DOCKER_TAG}
+                    withCredentials([usernamePassword(credentialsId: 'dockerhub-token', 
+                           usernameVariable: 'DOCKER_USERNAME', 
+                           passwordVariable: 'DOCKER_PASSWORD')]) {
+                sh """
+                    echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
+                    docker push \${DOCKER_REGISTRY}/\${IMAGE_NAME}:\${IMAGE_TAG}
+                    docker logout
+                """
                 }
             }
         }
+      }
         stage('Deploy with Docker-Compose') {
             steps {
                 script {
