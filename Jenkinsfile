@@ -17,7 +17,7 @@ pipeline {
                 script {
                     echo "Building frontend Docker image..."
                     sh """                  
-                    docker build -t ${DOCKER_IMAGE_FRONT}:${DOCKER_TAG} ./frontend
+                    docker build -t ${DOCKER_USERNAME}/${DOCKER_IMAGE_FRONT}:${DOCKER_TAG} ./frontend
                     """
                 }
             }
