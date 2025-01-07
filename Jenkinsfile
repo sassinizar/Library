@@ -40,8 +40,8 @@ pipeline {
                            usernameVariable: 'DOCKER_USERNAME', 
                            passwordVariable: 'DOCKER_PASSWORD')]) {
                 sh """
-                    echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
-                    docker push \${DOCKER_REGISTRY}/\${IMAGE_NAME}:\${IMAGE_TAG}
+                    echo '$DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                    docker push ${DOCKER_REGISTRY}${IMAGE_NAME}:${IMAGE_TAG}
                     docker logout
                 """
                 }
@@ -56,8 +56,8 @@ pipeline {
                            usernameVariable: 'DOCKER_USERNAME', 
                            passwordVariable: 'DOCKER_PASSWORD')]) {
                 sh """
-                    echo \$DOCKER_PASSWORD | docker login -u \$DOCKER_USERNAME --password-stdin
-                    docker push \${DOCKER_REGISTRY}/\${IMAGE_NAME}:\${IMAGE_TAG}
+                    echo '$DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+                    docker push ${DOCKER_REGISTRY}${IMAGE_NAME}:${IMAGE_TAG}
                     docker logout
                 """
                 }
