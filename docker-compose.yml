@@ -18,6 +18,7 @@ services:
       - app_network
 
   flask_app:
+    image: flaskapp
     build: ./Backend
     container_name: flask_app
     restart: always
@@ -31,6 +32,7 @@ services:
       - app_network
 
   react-app:
+    image: reactapp
     build: ./frontend
     container_name: react_app
     restart: always
