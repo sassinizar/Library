@@ -3,7 +3,7 @@ pipeline {
     environment {
         DOCKER_IMAGE_FRONT = 'flaskapp'
         DOCKER_IMAGE_BACK = 'reactapp'
-        DOCKER_TAG = "${env.BUILD_NUMBER}" // Dynamic tag
+        DOCKER_TAG = "latest"// Dynamic tag "${env.BUILD_NUMBER}" 
     }
 
     stages {
@@ -32,11 +32,21 @@ pipeline {
                            passwordVariable: 'DOCKER_PASSWORD')]) {
                 sh """
                     echo '$DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
+<<<<<<< HEAD
                     docker tag flask_app nizar27/${DOCKER_IMAGE_BACK}:${DOCKER_TAG}
                     docker push nizar27/${DOCKER_IMAGE_BACK}:${DOCKER_TAG}
                     docker tag react_app nizar27/${DOCKER_IMAGE_FRONT}:${DOCKER_TAG}
                     docker push nizar27/${DOCKER_IMAGE_FRONT}:${DOCKER_TAG}
                     docker logout
+=======
+
+                    docker tag flask_app:latest nizar27/${DOCKER_IMAGE_BACK}:latest 
+                    docker push nizar27/${DOCKER_IMAGE_BACK}:latest 
+
+                    docker tag react_app:latest nizar27/${DOCKER_IMAGE_FRONT}:latest 
+                    docker push nizar27/${DOCKER_IMAGE_FRONT}:latest 
+        
+>>>>>>> 60f4305e073e94de2080f6191f4b4bfa7bf63763
                 """
                 }
             }
