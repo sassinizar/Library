@@ -12,27 +12,18 @@ pipeline {
                 git 'https://github.com/sassinizar/Library.git'
             }
         }
-        stage('Build Docker Frontend Image') {
+        stage('Building docker Images') {
             steps {
                 script {
                     echo "Building frontend Docker image..."
                     sh """                  
-                    docker build -t ${DOCKER_IMAGE_FRONT}:${DOCKER_TAG} ./frontend
+                    docker-compose build
                     """
                 }
             }
         }
-        stage('Build Docker Backend Image') {
-            steps {
-                script {
-                    echo "Building backend Docker image..."
-                    sh """
-                    docker build -t ${DOCKER_USERNAME}/${DOCKER_IMAGE_BACK}:${DOCKER_TAG} ./Backend
-                    """
-                }
-            }
-        }
-        stage('Push Frontend Docker Image') {
+       
+        stage('Pushing the Images docker') {
             steps {
                 script {
                     echo "Pushing frontend Docker image to Docker Hub..."
@@ -41,34 +32,23 @@ pipeline {
                            passwordVariable: 'DOCKER_PASSWORD')]) {
                 sh """
                     echo '$DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-                    docker push ${DOCKER_USERNAME}/${DOCKER_IMAGE_FRONT}:${DOCKER_TAG}
+                    docker tag flask_app nizar27/${DOCKER_IMAGE_BACK}:${DOCKER_TAG}
+                    docker push nizar27/${DOCKER_IMAGE_BACK}:${DOCKER_TAG}
+                    docker tag react_app nizar27/${DOCKER_IMAGE_FRONT}:${DOCKER_TAG}
+                    docker push nizar27/${DOCKER_IMAGE_FRONT}:${DOCKER_TAG}
                     docker logout
                 """
                 }
             }
         }
      }
-        stage('Push Backend Docker Image') {
-            steps {
-                script {
-                    echo "Pushing backend Docker image to Docker Hub..."
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub-token', 
-                           usernameVariable: 'DOCKER_USERNAME', 
-                           passwordVariable: 'DOCKER_PASSWORD')]) {
-                sh """
-                    echo '$DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-                    docker push ${$DOCKER_USERNAME}/${DOCKER_IMAGE_BACK}:${DOCKER_TAG}
-                    docker logout
-                """
-                }
-            }
-        }
-      }
+       
         stage('Deploy with Docker-Compose') {
             steps {
                 script {
                     echo "Deploying with Docker Compose..."
                     sh 'docker-compose down'
+                    sh 'docker-compose pull'
                     sh 'docker-compose up -d'
                 }
             }
