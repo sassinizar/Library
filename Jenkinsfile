@@ -33,11 +33,11 @@ pipeline {
                 sh """
                     echo '$DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
 
-                    docker tag flask_app:latest nizar27/${DOCKER_IMAGE_BACK}:${DOCKER_TAG}
-                    docker push nizar27/${DOCKER_IMAGE_BACK}:${DOCKER_TAG}
+                    docker tag flask_app:latest nizar27/${DOCKER_IMAGE_BACK}:latest 
+                    docker push nizar27/${DOCKER_IMAGE_BACK}:latest 
 
-                    docker tag react_app:latest nizar27/${DOCKER_IMAGE_FRONT}:${DOCKER_TAG}
-                    docker push nizar27/${DOCKER_IMAGE_FRONT}:${DOCKER_TAG}
+                    docker tag react_app:latest nizar27/${DOCKER_IMAGE_FRONT}:latest 
+                    docker push nizar27/${DOCKER_IMAGE_FRONT}:latest 
         
                 """
                 }
