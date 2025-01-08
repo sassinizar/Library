@@ -1,9 +1,9 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE_FRONT = 'reactapp'
-        DOCKER_IMAGE_BACK = 'flaskapp'
-        DOCKER_TAG = "${env.BUILD_NUMBER}" // Dynamic tag
+        DOCKER_IMAGE_FRONT = 'flaskapp'
+        DOCKER_IMAGE_BACK = 'reactapp'
+        DOCKER_TAG = "latest"// Dynamic tag "${env.BUILD_NUMBER}" 
     }
 
     stages {
@@ -32,11 +32,13 @@ pipeline {
                            passwordVariable: 'DOCKER_PASSWORD')]) {
                 sh """
                     echo '$DOCKER_PASSWORD | docker login -u $DOCKER_USERNAME --password-stdin'
-                    docker tag flask_app nizar27/${DOCKER_IMAGE_BACK}:${DOCKER_TAG}
+
+                    docker tag flask_app:latest nizar27/${DOCKER_IMAGE_BACK}:${DOCKER_TAG}
                     docker push nizar27/${DOCKER_IMAGE_BACK}:${DOCKER_TAG}
-                    docker tag react_app nizar27/${DOCKER_IMAGE_FRONT}:${DOCKER_TAG}
+
+                    docker tag react_app:latest nizar27/${DOCKER_IMAGE_FRONT}:${DOCKER_TAG}
                     docker push nizar27/${DOCKER_IMAGE_FRONT}:${DOCKER_TAG}
-                    docker logout
+        
                 """
                 }
             }
