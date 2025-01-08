@@ -1,8 +1,8 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE_FRONT = 'flaskapp'
-        DOCKER_IMAGE_BACK = 'reactapp'
+        DOCKER_IMAGE_FRONT = 'reactapp'
+        DOCKER_IMAGE_BACK = 'flaskapp'
         DOCKER_TAG = "${env.BUILD_NUMBER}" // Dynamic tag
     }
 
