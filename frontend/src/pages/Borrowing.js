@@ -36,71 +36,56 @@ const Borrowing = () => {
   };
 
   return (
-    <div style={styles.container}>
-      <h1 style={styles.title}>My Borrowings</h1>
-      {error && <p style={styles.error}>{error}</p>}
-      {borrowings.length === 0 ? (
-        <p>No borrowings found.</p>
-      ) : (
-        <table style={styles.table}>
-          <thead>
-            <tr>
-              <th>Media Title</th>
-              <th>Borrow Date</th>
-              <th>Due Date</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody>
-            {borrowings.map((borrowing) => (
-              <tr key={borrowing._id}>
-                <td>{borrowing.media_title || "Unknown Title"}</td>
-                <td>{new Date(borrowing.borrow_date).toLocaleDateString()}</td>
-                <td>{new Date(borrowing.due_date).toLocaleDateString()}</td>
-                <td>
-                  <button
-                    style={styles.button}
-                    onClick={() => returnMedia(borrowing._id)}
-                  >
-                    Return
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+    <div className="container mt-4">
+      <div className="card shadow">
+        <div className="card-header bg-primary text-white">
+          <h3>My Borrowings</h3>
+        </div>
+        <div className="card-body">
+          {error && <div className="alert alert-danger">{error}</div>}
+          {borrowings.length === 0 ? (
+            <p className="text-center">No borrowings found.</p>
+          ) : (
+            <div className="table-responsive">
+              <table className="table table-bordered table-striped">
+                <thead className="thead-dark">
+                  <tr>
+                    <th>#</th>
+                    <th>Media Title</th>
+                    <th>Borrow Date</th>
+                    <th>Due Date</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {borrowings.map((borrowing, index) => (
+                    <tr key={borrowing._id}>
+                      <td>{index + 1}</td>
+                      <td>{borrowing.media_title || "Unknown Title"}</td>
+                      <td>
+                        {new Date(borrowing.borrow_date).toLocaleDateString()}
+                      </td>
+                      <td>
+                        {new Date(borrowing.due_date).toLocaleDateString()}
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-danger btn-sm"
+                          onClick={() => returnMedia(borrowing._id)}
+                        >
+                          Return
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </div>
     </div>
   );
-};
-
-// Inline styles
-const styles = {
-  container: {
-    padding: "20px",
-  },
-  title: {
-    fontSize: "28px",
-    fontWeight: "bold",
-    marginBottom: "20px",
-  },
-  error: {
-    color: "red",
-    marginBottom: "20px",
-  },
-  table: {
-    width: "100%",
-    borderCollapse: "collapse",
-    marginBottom: "20px",
-  },
-  button: {
-    backgroundColor: "#dc3545",
-    color: "#fff",
-    border: "none",
-    borderRadius: "5px",
-    padding: "8px 12px",
-    cursor: "pointer",
-  },
 };
 
 export default Borrowing;
