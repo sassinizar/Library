@@ -15,7 +15,7 @@ pipeline {
         stage('Building docker Images') {
             steps {
                 script {
-                    echo "Building frontend Docker image..."
+                    echo "Building Docker images both front and back..."
                     sh """                  
                     docker-compose build
                     """
