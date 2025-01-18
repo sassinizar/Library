@@ -1,5 +1,5 @@
 # Library
-# Sharded MongoDB with Flask and React
+# Flask and React
 
 This project demonstrates a containerized application with a sharded MongoDB cluster, a Flask backend, and a React frontend. The application uses Docker Compose to orchestrate the services.
 
