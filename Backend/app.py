@@ -3,6 +3,7 @@ from flask import Flask
 from pymongo import MongoClient
 from routes.user import user_bp
 from routes.media import media_bp
+from routes.borrowing import borrowing_bp
 from config import Config
 from flask_cors import CORS
 
@@ -25,6 +26,8 @@ def create_app():
     # Register blueprints
     app.register_blueprint(user_bp, url_prefix='/api/users')
     app.register_blueprint(media_bp, url_prefix='/api/medias')
+    app.register_blueprint(borrowing_bp, url_prefix='/api/borrowings')
+
     return app
 
 # Create the Flask application instance

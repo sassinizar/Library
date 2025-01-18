@@ -1,18 +1,19 @@
-# models/borrowing.py
+from flask import current_app
 from bson import ObjectId
 from datetime import datetime, timedelta
 
 class Borrowing:
     def __init__(self, db):
-        self.collection = db['borrowing']
-    
-    def borrow_media(self, user_id, media_id):
+        # Access the db attached to the current Flask application context
+        self.collection = current_app.db['borrowing']
+        
+    def borrow_media(self, user_id, media_id, borrow_period_days=14):
         borrowing = {
             'user_id': ObjectId(user_id),
             'media_id': ObjectId(media_id),
             'borrow_date': datetime.utcnow(),
-            'due_date': datetime.utcnow() + timedelta(14),
-            'returned': False
+            'due_date': datetime.utcnow() + timedelta(days=borrow_period_days),
+            'returned': False 
         }
         return self.collection.insert_one(borrowing)
     
@@ -30,3 +31,6 @@ class Borrowing:
             'user_id': ObjectId(user_id),
             'returned': False
         }))
+    
+    def get_all_borrowings(self):
+         return list(self.collection.find()) 

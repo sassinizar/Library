@@ -1,13 +1,15 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
+  const navigate = useNavigate();
   return (
     <div style={styles.container}>
       <h1 style={styles.title}>Welcome to NS Library</h1>
       <p style={styles.description}>
         Manage your media and borrowings efficiently with our easy-to-use platform.
       </p>
-      <button style={styles.button} onClick={() => alert("Explore the Library!")}>
+      <button style={styles.button} onClick={() => navigate("/media")}>
         Explore Library
       </button>
     </div>
