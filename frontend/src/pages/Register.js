@@ -17,6 +17,8 @@ const Register = () => {
         email,
         password,
       });
+      //Added used data
+      console.log(response.data);
       setSuccessMessage('User registered successfully');
     } catch (err) {
       setError('Error registering user: ' + err.message);
